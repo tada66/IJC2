@@ -3,7 +3,8 @@
 #include <string.h>
 #include <ctype.h>
 
-typedef struct { char c[2048]; } LINE;  //Maximum length of a single line 2047 + 1 for \0
+#define MAX_LINE_LENGTH 2048
+typedef struct { char c[MAX_LINE_LENGTH]; } LINE;  //Maximum length of a single line 2047 + 1 for \0
 
 typedef struct{
 LINE* buffer;
@@ -21,6 +22,16 @@ cbuf* cbuf_create(int n){
     return cbuf;
 }
 
+int isnumber(char* arg){
+    int i = 0; 
+    while (arg[i]!='\0'){
+        if(!isdigit(arg[i]))
+            return 0;
+        i++;
+    }
+    return 1;
+}
+
 void cbuf_put (cbuf* cbuffer, char* line) 
 {
     int i = 0;
@@ -30,6 +41,7 @@ void cbuf_put (cbuf* cbuffer, char* line)
     }
     cbuffer->buffer[cbuffer->writeIndex].c[2047]='\0';
     cbuffer->writeIndex = (cbuffer->writeIndex + 1) % cbuffer->bufferSize;
+    cbuffer->readIndex = (cbuffer->readIndex + 1) % cbuffer->bufferSize;
 }
 
 LINE cbuf_get(cbuf* cbuffer){
@@ -42,8 +54,12 @@ int main (int argc, char** argv)
 {
     int lines = 10;
     FILE *file = stdin;
+    if(argc > 4){
+        fprintf(stderr, "Too many arguments!\n");
+        exit(1);
+    }
     if(argc > 2 && strcmp(argv[1], "-n") == 0){
-        if(!isdigit(*argv[2])){
+        if(!isnumber(argv[2])){
             fprintf(stderr, "Invalid value for argument -n\n");
             exit(1);
         }
@@ -56,16 +72,30 @@ int main (int argc, char** argv)
     }
     else if (argc == 2)
         file = fopen(argv[1], "r");
-        
+
     if(file==NULL){
         fprintf(stderr, "Failed to open file!\n");
         exit(1);
     }
-    printf("cbuffer size=%d\n", lines);
-    cbuf* cbuffer = cbuf_create(lines); 
-    int value = 1001;
-    /*while (put (value ++));
-    while (get (& value))
-        printf ("read %d\n", value);*/
+    cbuf *cbuffer = cbuf_create(lines);
+
+    int c;
+    int lineIndex=0;
+    LINE line;
+    while((c = fgetc(file))!=EOF){
+        if(c!='\n'){
+            line.c[lineIndex] = c;
+            lineIndex++;
+        }
+        else{
+            cbuf_put(cbuffer, line.c);
+            lineIndex=0;
+        }
+    }
+    for(int i=0; i<lines; i++){
+        if(i<cbuffer->bufferSize)
+            printf("%s\n", cbuf_get(cbuffer).c);
+    }
+    fclose(file);
     return 0;
 }
