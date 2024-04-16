@@ -3,7 +3,7 @@
 #include <string.h>
 #include <ctype.h>
 
-typedef struct { char c[2048]; } LINE;
+typedef struct { char c[2048]; } LINE;  //Maximum length of a single line 2047 + 1 for \0
 
 typedef struct{
 LINE* buffer;
@@ -43,10 +43,14 @@ void cbuf_put (cbuf* cbuffer, char* line)
         i++;
     }
     cbuffer->buffer[cbuffer->writeIndex].c[2047]='\0';
-    cbuffer->writeIndex++;
+    cbuffer->writeIndex = (cbuffer->writeIndex + 1) % cbuffer->bufferSize;
 }
 
-
+LINE cbuf_get(cbuf* cbuffer){
+    LINE line = cbuffer->buffer[cbuffer->readIndex];
+    cbuffer->readIndex = (cbuffer->readIndex + 1) % cbuffer->bufferSize;
+    return line;
+}
 
 int main (int argc, char** argv)
 {
@@ -66,7 +70,12 @@ int main (int argc, char** argv)
     }
     printf("cbuffer size=%d\n", lines);
     cbuf* cbuffer = cbuf_create(lines);
-    
+    cbuf_put(cbuffer, "aaahhh");
+    cbuf_put(cbuffer, "aaa");
+    cbuf_put(cbuffer, "hhh");
+    cbuf_put(cbuffer, "bing bong");
+    for(int i=0; i<cbuffer->bufferSize; i++)
+        printf("%s\n", cbuf_get(cbuffer).c);
     int value = 1001;
     /*while (put (value ++));
     while (get (& value))
