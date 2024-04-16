@@ -1,14 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct cbuf{
-char** buffer; 
+typedef struct { char c[2048]; } LINE;
+
+typedef struct{
+LINE* buffer;
 int writeIndex;
 int readIndex;
 int bufferSize;
-};
-
-typedef struct LINE { char c[2048]; };
+} cbuf;
 
 /*
 int cbuf_get (int * value) 
@@ -24,25 +24,27 @@ int cbuf_get (int * value)
   return 1;
 }
 */
-char** cbuf_create(int n){
-    char** buffer = malloc(sizeof(char*)*n);
-    return buffer;
+cbuf* cbuf_create(int n){
+    cbuf* cbuf = malloc(sizeof(cbuf));
+    cbuf->bufferSize=n;
+    cbuf->readIndex=0;
+    cbuf->writeIndex=0;
+    cbuf->buffer = malloc(sizeof(LINE)*n);
+    return cbuf;
 }
 
-void cbuf_put (struct cbuf cbuffer, char* line) 
+void cbuf_put (cbuf* cbuffer, char* line) 
 {
-    cbuffer.buffer[cbuffer.writeIndex] = malloc(sizeof(char));
+    
 }
 
 int main ()
 {
-    struct cbuf cbuffer;
-    cbuffer.writeIndex = 0;
-    cbuffer.readIndex = 0;
-    cbuffer.buffer = cbuf_create(2);
+    int lines = 10;
+    cbuf* cbuffer = cbuf_create(2);
     for(int i=0; i<2; i++){
-        cbuffer.buffer[i] = 'a';
-        printf("%c\n", cbuffer.buffer[i]);
+        cbuffer->buffer[i].c[0] = 'b';
+        printf("%s\n", cbuffer->buffer[i].c);
     }
     int value = 1001;
     /*while (put (value ++));
