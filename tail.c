@@ -34,6 +34,7 @@ int isnumber(char* arg){
 
 void cbuf_put (cbuf* cbuffer, char* line) 
 {
+    memset(cbuffer->buffer[cbuffer->writeIndex].c, 0, sizeof(LINE));
     int i = 0;
     while(line[i]!='\0' && i<2047){
         cbuffer->buffer[cbuffer->writeIndex].c[i]=line[i];
@@ -41,7 +42,6 @@ void cbuf_put (cbuf* cbuffer, char* line)
     }
     cbuffer->buffer[cbuffer->writeIndex].c[2047]='\0';
     cbuffer->writeIndex = (cbuffer->writeIndex + 1) % cbuffer->bufferSize;
-    cbuffer->readIndex = (cbuffer->readIndex + 1) % cbuffer->bufferSize;
 }
 
 LINE cbuf_get(cbuf* cbuffer){
@@ -80,12 +80,14 @@ int main (int argc, char** argv)
     cbuf *cbuffer = cbuf_create(lines);
 
     LINE line;
-    while (fgets(line.c, sizeof(MAX_LINE_LENGTH), file) != NULL) {
+    while (fgets(line.c, MAX_LINE_LENGTH*sizeof(char), file) != NULL) {
         cbuf_put(cbuffer, line.c);
     }
 
     fclose(file);
-    
+
+    //cbuf_get(cbuffer).c;
+    printf("------------\n");
     for(int i=0; i<lines; i++){
         if(i<cbuffer->bufferSize)
             printf("%s", cbuf_get(cbuffer).c);
