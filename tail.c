@@ -79,23 +79,16 @@ int main (int argc, char** argv)
     }
     cbuf *cbuffer = cbuf_create(lines);
 
-    int c;
-    int lineIndex=0;
     LINE line;
-    while((c = fgetc(file))!=EOF){
-        if(c!='\n'){
-            line.c[lineIndex] = c;
-            lineIndex++;
-        }
-        else{
-            cbuf_put(cbuffer, line.c);
-            lineIndex=0;
-        }
+    while (fgets(line.c, sizeof(MAX_LINE_LENGTH), file) != NULL) {
+        cbuf_put(cbuffer, line.c);
     }
+
+    fclose(file);
+    
     for(int i=0; i<lines; i++){
         if(i<cbuffer->bufferSize)
-            printf("%s\n", cbuf_get(cbuffer).c);
+            printf("%s", cbuf_get(cbuffer).c);
     }
-    fclose(file);
     return 0;
 }
