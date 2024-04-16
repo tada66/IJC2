@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
 
 typedef struct { char c[2048]; } LINE;
 
@@ -38,9 +40,21 @@ void cbuf_put (cbuf* cbuffer, char* line)
     
 }
 
-int main ()
+int main (int argc, char** argv)
 {
     int lines = 10;
+    FILE *file;
+    if(strcmp(argv[1], "-n") == 0){
+        if(!isdigit(argv[2])){
+            fprintf(stderr, "number of lines: '%s'", argv[2]);
+            exit(1);
+        }
+        lines = atoi(argv[2]);
+        if(lines == 0){
+            exit(0);
+        }
+    }
+    printf("%d\n", lines);
     cbuf* cbuffer = cbuf_create(2);
     for(int i=0; i<2; i++){
         cbuffer->buffer[i].c[0] = 'b';
