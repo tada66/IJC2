@@ -19,6 +19,8 @@ cbuf* cbuf_create(int n){
     cbuf->readIndex=0;
     cbuf->writeIndex=0;
     cbuf->buffer = malloc(sizeof(LINE)*n);
+    for(int i=0; i<n; i++)
+        memset(cbuf->buffer[i].c, 0, sizeof(LINE));
     return cbuf;
 }
 
@@ -42,6 +44,7 @@ void cbuf_put (cbuf* cbuffer, char* line)
     }
     cbuffer->buffer[cbuffer->writeIndex].c[2047]='\0';
     cbuffer->writeIndex = (cbuffer->writeIndex + 1) % cbuffer->bufferSize;
+    cbuffer->readIndex = (cbuffer->readIndex + 1) % cbuffer->bufferSize;
 }
 
 LINE cbuf_get(cbuf* cbuffer){
@@ -86,11 +89,13 @@ int main (int argc, char** argv)
 
     fclose(file);
 
-    //cbuf_get(cbuffer).c;
-    printf("------------\n");
+
     for(int i=0; i<lines; i++){
-        if(i<cbuffer->bufferSize)
-            printf("%s", cbuf_get(cbuffer).c);
+        if(i<cbuffer->bufferSize){
+            line = cbuf_get(cbuffer);
+            if(line.c[0]!='\0')
+                printf("%s", line.c);
+        }
     }
     return 0;
 }
