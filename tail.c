@@ -116,11 +116,15 @@ int main (int argc, char** argv)
             line = cbuf_get(cbuffer);
             if(line.c[0]!='\0')
                 printf("%s\n", line.c);
+            else
+                printf("\n");
         }
     }
     line = cbuf_get(cbuffer);
         if(line.c[0]!='\0')
             printf("%s", line.c);
+        else
+            printf("\n");
     cbuf_free(cbuffer);
     return 0;
 }
