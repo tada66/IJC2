@@ -1,3 +1,4 @@
+#define  _POSIX_C_SOURCE 200809L
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -14,11 +15,19 @@ int bufferSize;
 } cbuf;
 
 cbuf* cbuf_create(int n){
-    cbuf* cbuf = malloc(sizeof(cbuf));
+    cbuf* cbuf = malloc(sizeof(*cbuf));
+    if(cbuf==NULL){
+        fprintf(stderr, "Failed to allocate memory!\n");
+        exit(1);
+    }
     cbuf->bufferSize=n;
     cbuf->readIndex=0;
     cbuf->writeIndex=0;
     cbuf->buffer = malloc(sizeof(LINE)*n);
+    if(cbuf->buffer==NULL){
+        fprintf(stderr, "Failed to allocate memory!\n");
+        exit(1);
+    }
     for(int i=0; i<n; i++)
         memset(cbuf->buffer[i].c, 0, sizeof(LINE));
     return cbuf;
@@ -51,6 +60,11 @@ LINE cbuf_get(cbuf* cbuffer){
     LINE line = cbuffer->buffer[cbuffer->readIndex];
     cbuffer->readIndex = (cbuffer->readIndex + 1) % cbuffer->bufferSize;
     return line;
+}
+
+void cbuf_free(cbuf* cbuffer){
+    free(cbuffer->buffer);
+    free(cbuffer);
 }
 
 int main (int argc, char** argv)
@@ -107,5 +121,6 @@ int main (int argc, char** argv)
     line = cbuf_get(cbuffer);
         if(line.c[0]!='\0')
             printf("%s", line.c);
+    cbuf_free(cbuffer);
     return 0;
 }
