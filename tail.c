@@ -80,8 +80,9 @@ int main (int argc, char** argv)
         fprintf(stderr, "Failed to open file!\n");
         exit(1);
     }
-    cbuf *cbuffer = cbuf_create(lines);
 
+
+    cbuf *cbuffer = cbuf_create(lines);
     char *gline = NULL;
     size_t glinecount = 0;
     
@@ -96,12 +97,15 @@ int main (int argc, char** argv)
 
     LINE line;
 
-    for(int i=0; i<lines; i++){
+    for(int i=0; i<lines-1; i++){
         if(i<cbuffer->bufferSize){
             line = cbuf_get(cbuffer);
             if(line.c[0]!='\0')
-                printf("%s", line.c);
+                printf("%s\n", line.c);
         }
     }
+    line = cbuf_get(cbuffer);
+        if(line.c[0]!='\0')
+            printf("%s", line.c);
     return 0;
 }
