@@ -82,13 +82,16 @@ int main (int argc, char** argv)
     }
     cbuf *cbuffer = cbuf_create(lines);
 
-    LINE line;
-    while (fgets(line.c, MAX_LINE_LENGTH*sizeof(char), file) != NULL) {
-        cbuf_put(cbuffer, line.c);
+    char *gline;
+    size_t glinecount;
+
+    while (getline(&gline, &glinecount, file) != -1) {
+        cbuf_put(cbuffer, gline);
     }
 
     fclose(file);
 
+    LINE line;
 
     for(int i=0; i<lines; i++){
         if(i<cbuffer->bufferSize){
