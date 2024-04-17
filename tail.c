@@ -82,13 +82,16 @@ int main (int argc, char** argv)
     }
     cbuf *cbuffer = cbuf_create(lines);
 
-    char *gline;
-    size_t glinecount;
-
+    char *gline = NULL;
+    size_t glinecount = 0;
+    
     while (getline(&gline, &glinecount, file) != -1) {
+        gline[strcspn(gline, "\n")] = '\0';
+        if(glinecount>MAX_LINE_LENGTH-1)
+            gline[MAX_LINE_LENGTH-1]='\0';
         cbuf_put(cbuffer, gline);
     }
-
+    free(gline);
     fclose(file);
 
     LINE line;
