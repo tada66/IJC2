@@ -10,9 +10,9 @@ htab_t *htab_init(const size_t n){
     }
     tab->size = 0;
     tab->arr_size = n;
-    tab->arr_ptr = calloc(sizeof(htab_itm_t), n);
-    return tab;
+    tab->arr_ptr = calloc(sizeof(htab_itm_t*), n);
     if(tab->arr_ptr == NULL){
         fprintf(stderr, "Failed to allocate memory!\n");
     }
+    return tab;
 }
