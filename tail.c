@@ -47,11 +47,12 @@ void cbuf_put (cbuf* cbuffer, char* line)
 {
     memset(cbuffer->buffer[cbuffer->writeIndex].c, 0, sizeof(LINE));
     int i = 0;
-    while(line[i]!='\0' && i<2047){
+    while(line[i]!='\0' && i<MAX_LINE_LENGTH){
         cbuffer->buffer[cbuffer->writeIndex].c[i]=line[i];
         i++;
     }
-    cbuffer->buffer[cbuffer->writeIndex].c[2047]='\0';
+    for(int j=i; j<MAX_LINE_LENGTH; j++)
+        cbuffer->buffer[cbuffer->writeIndex].c[j]='\0';
     cbuffer->writeIndex = (cbuffer->writeIndex + 1) % cbuffer->bufferSize;
     cbuffer->readIndex = (cbuffer->readIndex + 1) % cbuffer->bufferSize;
 }
@@ -101,7 +102,6 @@ int main (int argc, char** argv)
     size_t glinecount = 0;
     
     while (getline(&gline, &glinecount, file) != -1) {
-        gline[strcspn(gline, "\n")] = '\0';
         if(glinecount>MAX_LINE_LENGTH-1)
             gline[MAX_LINE_LENGTH-1]='\0';
         cbuf_put(cbuffer, gline);
@@ -111,20 +111,16 @@ int main (int argc, char** argv)
 
     LINE line;
 
-    for(int i=0; i<lines-1; i++){
+    for(int i=0; i<lines; i++){
         if(i<cbuffer->bufferSize){
             line = cbuf_get(cbuffer);
-            if(line.c[0]!='\0')
-                printf("%s\n", line.c);
-            else
-                printf("\n");
+            if(line.c[0]!='\0'){
+                printf("%s", line.c);
+                if(strstr(line.c, "\n") == NULL)//if \n got cut off we need to insert it back again
+                    printf("\n");
+            }
         }
     }
-    line = cbuf_get(cbuffer);
-        if(line.c[0]!='\0')
-            printf("%s", line.c);
-        else
-            printf("\n");
     cbuf_free(cbuffer);
     return 0;
 }
