@@ -11,6 +11,8 @@
 #include "htab_bucket_count.c"
 #include "htab_lookup_add.c"
 #include "htab_hash_function.c"
+#include "htab_clear.c"
+#include "htab_free.c"
 
 #define HASH_TABLE_SIZE 16
 
@@ -24,6 +26,7 @@ int main(){
     if(htab_erase(t, "bing bong"));
         printf("successful erase of bing bong\n");
     printf("Size: %ld, Arr size: %ld\n", htab_size(t), htab_bucket_count(t));
-    
+    htab_free(t);
+
     return 0;
 }
