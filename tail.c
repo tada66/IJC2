@@ -46,8 +46,8 @@ int isnumber(char* arg){
 void cbuf_put (cbuf* cbuffer, char* line) 
 {
     int i = 0;
-    while(line[i]!='\0' && i<MAX_LINE_LENGTH){
-        cbuffer->buffer[cbuffer->writeIndex].c[i]=line[i];  //write until we reach \0, or max char count
+    while(line[i]!='\0' && i<MAX_LINE_LENGTH-1){
+        cbuffer->buffer[cbuffer->writeIndex].c[i]=line[i];  //write until we reach \0, or max char count-1, to guarantee the last char is \0
         i++;
     }
     for(int j=i; j<MAX_LINE_LENGTH; j++)
@@ -100,17 +100,24 @@ int main (int argc, char** argv)
     cbuf *cbuffer = cbuf_create(lines);
     char *gline = NULL;
     size_t glinecount = 0;
+    int truncated = 0;
     
     while (getline(&gline, &glinecount, file) != -1) {  //Read lines from file, until we reach the end
-        if(glinecount>MAX_LINE_LENGTH-1)                //If we read more than 2047 chars we replace the last one with \0
-            gline[MAX_LINE_LENGTH-1]='\0';
+        if(glinecount>MAX_LINE_LENGTH){
+            if(!truncated){
+                if(gline[MAX_LINE_LENGTH-1]!=0 && gline[MAX_LINE_LENGTH-1]!=10 && gline[MAX_LINE_LENGTH-1]!=13){    //If not NUL, LF or CR, we still haven't reached the end of line, truncating
+                    truncated=1;
+                    fprintf(stderr, "Line longer than 2047 characters detected!\n");
+                }
+            }
+        }
         cbuf_put(cbuffer, gline);  
     }
     free(gline);
     fclose(file);
-
+    
     LINE line;
-
+        
     for(int i=0; i<lines; i++){ //
         if(i<cbuffer->bufferSize){
             line = cbuf_get(cbuffer);
