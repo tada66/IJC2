@@ -45,15 +45,14 @@ int isnumber(char* arg){
 
 void cbuf_put (cbuf* cbuffer, char* line) 
 {
-    memset(cbuffer->buffer[cbuffer->writeIndex].c, 0, sizeof(LINE));
     int i = 0;
     while(line[i]!='\0' && i<MAX_LINE_LENGTH){
-        cbuffer->buffer[cbuffer->writeIndex].c[i]=line[i];
+        cbuffer->buffer[cbuffer->writeIndex].c[i]=line[i];  //write until we reach \0, or max char count
         i++;
     }
     for(int j=i; j<MAX_LINE_LENGTH; j++)
-        cbuffer->buffer[cbuffer->writeIndex].c[j]='\0';
-    cbuffer->writeIndex = (cbuffer->writeIndex + 1) % cbuffer->bufferSize;
+        cbuffer->buffer[cbuffer->writeIndex].c[j]='\0';     //if we haven't filled the whole line, set the rest to \0
+    cbuffer->writeIndex = (cbuffer->writeIndex + 1) % cbuffer->bufferSize; //increment index by one, if index>size -> index=0
     cbuffer->readIndex = (cbuffer->readIndex + 1) % cbuffer->bufferSize;
 }
 
@@ -70,8 +69,9 @@ void cbuf_free(cbuf* cbuffer){
 
 int main (int argc, char** argv)
 {
-    int lines = 10;
+    int lines = 10;     //By default return last 10 lines and read from stdin
     FILE *file = stdin;
+
     if(argc > 4){
         fprintf(stderr, "Too many arguments!\n");
         exit(1);
@@ -101,23 +101,23 @@ int main (int argc, char** argv)
     char *gline = NULL;
     size_t glinecount = 0;
     
-    while (getline(&gline, &glinecount, file) != -1) {
-        if(glinecount>MAX_LINE_LENGTH-1)
+    while (getline(&gline, &glinecount, file) != -1) {  //Read lines from file, until we reach the end
+        if(glinecount>MAX_LINE_LENGTH-1)                //If we read more than 2047 chars we replace the last one with \0
             gline[MAX_LINE_LENGTH-1]='\0';
-        cbuf_put(cbuffer, gline);
+        cbuf_put(cbuffer, gline);  
     }
     free(gline);
     fclose(file);
 
     LINE line;
 
-    for(int i=0; i<lines; i++){
+    for(int i=0; i<lines; i++){ //
         if(i<cbuffer->bufferSize){
             line = cbuf_get(cbuffer);
             if(line.c[0]!='\0'){
                 printf("%s", line.c);
-                if(strstr(line.c, "\n") == NULL)//if \n got cut off we need to insert it back again
-                    printf("\n");
+                if(strstr(line.c, "\n") == NULL && i!=lines-1)//if \n got cut off due to a line being too long we need to insert it back again
+                    printf("\n");                               //Also do NOT print newline on last line
             }
         }
     }
