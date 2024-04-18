@@ -6,9 +6,11 @@
 #include "htab_t.h"
 #include "htab_init.c"
 
+#define HASH_TABLE_SIZE 16
+
 
 int main(){
-    htab_t *t = htab_init(16);
+    htab_t *t = htab_init(HASH_TABLE_SIZE);
 
     return 0;
 }
