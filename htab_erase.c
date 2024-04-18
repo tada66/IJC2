@@ -14,6 +14,7 @@ bool htab_erase(htab_t * t, htab_key_t key){
                 t->arr_ptr[index] = itm->next;
             else
                 previtm->next = itm->next;
+            free(itm->pair.key);
             free(itm);
             t->size--;
             return true;
