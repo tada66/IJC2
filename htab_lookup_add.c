@@ -5,8 +5,10 @@
 
 htab_pair_t * htab_lookup_add(htab_t * t, htab_key_t key){
     htab_pair_t *pair = htab_find(t, key);
-    if(pair!=NULL)
+    if(pair!=NULL){
+        pair->value++;
         return pair;
+    }
     else{
         size_t hash = htab_hash_function(key);
         size_t index = hash % t->arr_size;
