@@ -1,3 +1,5 @@
 .vscode
 *.out
 tail
+libhtab.a
+libhtab.so
