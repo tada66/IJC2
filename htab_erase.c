@@ -1,8 +1,6 @@
 #include "htab.h"
 #include "htab_t.h"
 
-#include <stdio.h>
-
 bool htab_erase(htab_t * t, htab_key_t key){
     size_t hash = htab_hash_function(key);
     int index = hash % t->arr_size;
