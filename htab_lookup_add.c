@@ -23,6 +23,7 @@ htab_pair_t * htab_lookup_add(htab_t * t, htab_key_t key){
         newitm->next=NULL;
         newitm->pair.key=key;
         newitm->pair.value=0;
+        t->size++;
         return newitm;
     }
 }
