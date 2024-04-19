@@ -10,7 +10,7 @@ void htab_clear(htab_t * t){
         while(itm!=NULL){
             previtm=itm;
             itm=itm->next;
-            free((void *)previtm->pair.key);
+            free((char *)previtm->pair.key);
             free(previtm);
         }
     }
