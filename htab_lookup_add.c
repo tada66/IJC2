@@ -29,14 +29,14 @@ htab_pair_t * htab_lookup_add(htab_t * t, htab_key_t key){
             itm->next = newitm;
 
         newitm->next=NULL;
-        //char *keyString = malloc(sizeof(char) * (strlen(key)+1));
-        /*if(keyString==NULL){
+        char *keyString = malloc(sizeof(char) * (strlen(key)+1));
+        if(keyString==NULL){
             fprintf(stderr, "Memory allocation failed!\n");
             free(newitm);
             exit(1);
-        }           //MEMORY LEAK FROM HERE
-        strcpy(keyString, key);*/
-        newitm->pair.key=key;
+        }
+        strcpy(keyString, key);
+        newitm->pair.key=keyString;
         newitm->pair.value=1;
         t->size++;
         return &newitm->pair;
