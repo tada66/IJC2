@@ -3,3 +3,4 @@
 tail
 libhtab.a
 libhtab.so
+*.o
