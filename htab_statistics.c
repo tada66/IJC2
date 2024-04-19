@@ -10,7 +10,7 @@ void htab_statistics(const htab_t * t){
 
     int count = 0;
     double total = 0.0;
-    for(int i=0; i<t->arr_size; i++){
+    for(size_t i=0; i<t->arr_size; i++){
         htab_itm_t *itm = t->arr_ptr[i];
         while(itm!=NULL){
             itm=itm->next;
