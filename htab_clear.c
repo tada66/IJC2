@@ -1,8 +1,6 @@
 #include "htab.h"
 #include "htab_t.h"
 
-#include <stdio.h>
-
 void htab_clear(htab_t * t){
     htab_itm_t *previtm = NULL;
     for(size_t i=0; i<t->arr_size; i++){
