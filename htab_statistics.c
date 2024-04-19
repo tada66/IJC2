@@ -16,7 +16,6 @@ void htab_statistics(const htab_t * t){
             itm=itm->next;
             count++;
         }
-        fprintf(stderr, "Index %d: %d\n", i, count);
         if(count>max)
             max=count;
         if(count<min)
