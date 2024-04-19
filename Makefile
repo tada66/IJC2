@@ -3,7 +3,7 @@
 # Autor: Tadeáš Horák, FIT
 # Přeloženo: gcc 11.4.0
 CC=gcc
-CFLAGS=-g -std=c11 -pedantic -Wall -Wextra
+CFLAGS=-g -fPIC -std=c11 -pedantic -Wall -Wextra
 LDFLAGS=-g -std=c11 -pedantic -Wall -Wextra
 
 OBJLIB=htab_hash_function.o htab_init.o htab_size.o htab_bucket_count.o htab_find.o htab_lookup_add.o htab_erase.o htab_for_each.o htab_clear.o htab_free.o htab_statistics.o
@@ -11,32 +11,52 @@ OBJLIB=htab_hash_function.o htab_init.o htab_size.o htab_bucket_count.o htab_fin
 
 all: tail wordcount wordcount-dynamic
 
-tail: tail.c
-	$(CC) $(LDFLAGS) -o $@ $^ -lm
+tail: tail.o
+	$(CC) $(CFLAGS) -o $@ $^
+
+tail.o: tail.c
+	$(CC) $(LDFLAGS) -o $@ -c $^
+
+
 
 wordcount: wordcount.o io.o libhtab.a
-	$(CC) $(CFLAGS) -o wordcount wordcount.o io.o -L . libhtab.a
+	$(CC) $(CFLAGS) -static -o $@ $^
 	
 wordcount-dynamic: wordcount.o io.o libhtab.so
-	$(CC) $(CFLAGS) -o wordcount-dynamic wordcount.o io.o libhtab.so
+	$(CC) $(CFLAGS) -o $@ $^
+
+
+wordcount.o: wordcount.c
+	$(CC) $(LDFLAGS) -o $@ -c $^
+
+io.o: io.c
+	$(CC) $(LDFLAGS) -o $@ -c $^
 	
-# Staticka a dynamicka knihovna
+# Static library
 libhtab.a: $(OBJLIB)
-	ar -rcs libhtab.a $(OBJLIB)
-	
-libhtab.so:	$(OBJLIB)
-	$(CC) $(CFLAGS) -shared -fPIC -o libhtab.so $(OBJLIB)
+	ar rcs -o $@ $(OBJLIB)
+
+# Dynamic library
+libhtab.so: $(OBJLIB)
+	$(CC) $(CFLAGS) -shared -o $@ $(OBJLIB)
 
 # Linking
 #$(EXEC): $(OBJS)
 #	$(CC) $(CFLAGS) $(OBJS) -o $(EXEC)
 
 # Clean target
-.PHONY: clean
-clean:
+.PHONY: cleanall
+cleanall:
 	rm -f *.o
 	rm -f *.out
 	rm -f tail
+	rm -f libhtab.a
+	rm -f libhtab.so
+
+# Clean target
+.PHONY: clean
+clean:
+	rm -f *.o
 
 .PHONY: zip
 zip: all
