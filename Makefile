@@ -32,6 +32,7 @@ wordcount.o: wordcount.c
 io.o: io.c
 	$(CC) $(LDFLAGS) -o $@ -c $^
 	
+
 # Static library
 libhtab.a: $(OBJLIB)
 	ar rcs -o $@ $(OBJLIB)
@@ -40,16 +41,14 @@ libhtab.a: $(OBJLIB)
 libhtab.so: $(OBJLIB)
 	$(CC) $(CFLAGS) -shared -o $@ $(OBJLIB)
 
-# Linking
-#$(EXEC): $(OBJS)
-#	$(CC) $(CFLAGS) $(OBJS) -o $(EXEC)
 
-# Clean target
 .PHONY: cleanall
 cleanall:
 	rm -f *.o
 	rm -f *.out
 	rm -f tail
+	rm -f wordcount
+	rm -f wordcount-dynamic
 	rm -f libhtab.a
 	rm -f libhtab.so
 

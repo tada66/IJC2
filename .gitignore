@@ -4,3 +4,5 @@ tail
 libhtab.a
 libhtab.so
 *.o
+wordcount
+wordcount-dynamic
