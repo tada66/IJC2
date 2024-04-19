@@ -23,14 +23,14 @@ wordcount: wordcount.o libhtab.a
 	$(CC) $(CFLAGS) -static -o wordcount wordcount.o -L . libhtab.a
 	
 wordcount-dynamic: wordcount.o libhtab.so
-	$(CC) $(CFLAGS) -o $@ $^
+	$(CC) $(CFLAGS) -o wordcount-dynamic wordcount.o -L . libhtab.so
 
 
 wordcount.o: wordcount.c
 	$(CC) $(LDFLAGS) -o $@ -c $^
 
-io.o: io.c
-	$(CC) $(LDFLAGS) -o $@ -c $^
+#io.o: io.c
+#	$(CC) $(LDFLAGS) -o $@ -c $^
 
 htab_bucket_count.o: htab_bucket_count.c
 	$(CC) $(CFLAGS) -fPIC -c $^
