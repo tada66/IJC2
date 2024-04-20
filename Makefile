@@ -12,25 +12,25 @@ OBJLIB=htab_hash_function.o htab_init.o htab_size.o htab_bucket_count.o htab_fin
 all: tail wordcount wordcount-dynamic
 
 tail: tail.o
-	$(CC) $(CFLAGS) -o $@ $^
+	$(CC) $(LDFLAGS) -o $@ $^
 
 tail.o: tail.c
-	$(CC) $(LDFLAGS) -o $@ -c $^
+	$(CC) $(CFLAGS) -o $@ -c $^
 
 
 
 wordcount: wordcount.o io.o libhtab.a
-	$(CC) $(CFLAGS) -static -o wordcount wordcount.o io.o -L. libhtab.a
+	$(CC) $(LDFLAGS) -static -o wordcount wordcount.o io.o -L. libhtab.a
 	
 wordcount-dynamic: wordcount.o io.o libhtab.so
-	$(CC) $(CFLAGS) -o wordcount-dynamic wordcount.o io.o -L. libhtab.so
+	$(CC) $(LDFLAGS) -o wordcount-dynamic wordcount.o io.o -L. libhtab.so
 
 
 wordcount.o: wordcount.c
-	$(CC) $(LDFLAGS) -o $@ -c $^
+	$(CC) $(CFLAGS) -o $@ -c $^
 
 io.o: io.c
-	$(CC) $(LDFLAGS) -o $@ -c $^
+	$(CC) $(CFLAGS) -o $@ -c $^
 
 
 htab_bucket_count.o: htab_bucket_count.c
