@@ -1,3 +1,8 @@
+//2. Příklad - io.c
+//Tadeáš Horák xhorakt00
+//VUT FIT
+//20.04.2024
+
 #include <stdio.h>
 #include <ctype.h> //isspace()
 #include <stdio.h>

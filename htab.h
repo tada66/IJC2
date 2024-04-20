@@ -1,3 +1,8 @@
+//2. Příklad - htab.h
+//Tadeáš Horák xhorakt00
+//VUT FIT
+//20.04.2024
+
 #ifndef HTAB_H__
 #define HTAB_H__
 

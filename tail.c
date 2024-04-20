@@ -1,3 +1,8 @@
+//1. Příklad - tail.c
+//Tadeáš Horák xhorakt00
+//VUT FIT
+//20.04.2024
+
 #define  _POSIX_C_SOURCE 200809L
 #include <stdio.h>
 #include <stdlib.h>

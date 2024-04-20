@@ -1,3 +1,8 @@
+//2. Příklad - htab_itm_t.h
+//Tadeáš Horák xhorakt00
+//VUT FIT
+//20.04.2024
+
 #include "htab.h"
 #ifndef __HTAB_ITM_T__
 #define __HTAB_ITM_T__
