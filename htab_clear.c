@@ -11,5 +11,6 @@ void htab_clear(htab_t * t){
             free((char *)previtm->pair.key);
             free(previtm);
         }
+        t->arr_ptr[i]=NULL;
     }
 }
