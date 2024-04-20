@@ -1,10 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-//#include <string.h>
-//#include <ctype.h>
 #include "io.h"
 #include "htab.h"
-#include <time.h>
 
 #define HASH_TABLE_SIZE 1300021
 #define MAX_WORD_LENGTH 256 //255+1 for \0
@@ -28,9 +25,7 @@ int main(){
         htab_lookup_add(t, word);
         memset(word, 0, sizeof(char) * MAX_WORD_LENGTH);
     }
-    //htab_clear(t);
     htab_for_each(t, &print_count);
-    //htab_statistics(t);
     htab_free(t);
     free(word);
 
