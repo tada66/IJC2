@@ -20,10 +20,10 @@ tail.o: tail.c
 
 
 wordcount: wordcount.o io.o libhtab.a
-	$(CC) $(CFLAGS) -static -o wordcount wordcount.o io.o -L . libhtab.a
+	$(CC) $(CFLAGS) -static -o wordcount wordcount.o io.o -L. libhtab.a
 	
 wordcount-dynamic: wordcount.o io.o libhtab.so
-	$(CC) $(CFLAGS) -o wordcount-dynamic wordcount.o io.o libhtab.so
+	$(CC) $(CFLAGS) -o wordcount-dynamic wordcount.o io.o -L. libhtab.so
 
 
 wordcount.o: wordcount.c
