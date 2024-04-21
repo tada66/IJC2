@@ -3,7 +3,7 @@
 //VUT FIT
 //20.04.2024
 
-#define  _POSIX_C_SOURCE 200809L
+#define  _POSIX_C_SOURCE 200809L    //needed to avoid -Wimplicit-function-declaration from getline
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -38,6 +38,7 @@ cbuf* cbuf_create(int n){
     return cbuf;
 }
 
+//Checks if a string is a number
 int isnumber(char* arg){
     int i = 0; 
     while (arg[i]!='\0'){
@@ -58,7 +59,7 @@ void cbuf_put (cbuf* cbuffer, char* line)
     for(int j=i; j<MAX_LINE_LENGTH; j++)
         cbuffer->buffer[cbuffer->writeIndex].c[j]='\0';     //if we haven't filled the whole line, set the rest to \0
     cbuffer->writeIndex = (cbuffer->writeIndex + 1) % cbuffer->bufferSize; //increment index by one, if index>size -> index=0
-    cbuffer->readIndex = (cbuffer->readIndex + 1) % cbuffer->bufferSize;
+    cbuffer->readIndex = (cbuffer->readIndex + 1) % cbuffer->bufferSize;   //we also move readIndex so that in the end we can start reading from the last changed line
 }
 
 LINE cbuf_get(cbuf* cbuffer){
@@ -78,11 +79,11 @@ int main (int argc, char** argv)
     FILE *file = stdin;
 
     if(argc > 4){
-        fprintf(stderr, "Too many arguments!\n");
+        fprintf(stderr, "Too many arguments!\n");   //max 4 arguments (./tail -n number file.txt)
         exit(1);
     }
     if(argc > 2 && strcmp(argv[1], "-n") == 0){
-        if(!isnumber(argv[2])){
+        if(!isnumber(argv[2])){                 //check that number of lines is actually a number, this will filter out negative numbers as well
             fprintf(stderr, "Invalid value for argument -n\n");
             exit(1);
         }
@@ -103,9 +104,9 @@ int main (int argc, char** argv)
 
 
     cbuf *cbuffer = cbuf_create(lines);
-    char *gline = NULL;
-    size_t glinecount = 0;
-    int truncated = 0;
+    char *gline = NULL; //Loaded line
+    size_t glinecount = 0;  //Amount of characters read
+    int truncated = 0;      //Keeps track of whether we have shown the 'line too long' error already
     
     while (getline(&gline, &glinecount, file) != -1) {  //Read lines from file, until we reach the end
         if(glinecount>MAX_LINE_LENGTH){
@@ -123,7 +124,7 @@ int main (int argc, char** argv)
     
     LINE line;
         
-    for(int i=0; i<lines; i++){ //
+    for(int i=0; i<lines; i++){
         if(i<cbuffer->bufferSize){
             line = cbuf_get(cbuffer);
             if(line.c[0]!='\0'){

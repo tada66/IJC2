@@ -8,24 +8,24 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-bool displayederror = false;
+bool displayederror = false;    //Sets to true after error is shown the first time 
 
 int read_word(char *s, int max, FILE *f){
-    int c = 0;
+    int c = 0; //loaded char from file
     int i = 0;
     bool overflow = 0;
     while((c = fgetc(f)) != EOF){
         if(!isspace(c)){
             if(i<max-1){
-                s[i] = c;
+                s[i] = c;   //Load until we fill up the buffer
                 i++;
             }
             else
-                overflow = 1;
+                overflow = 1;   //If there still hasn't been a space => word is longer than max and we should display error
         }
         else{
             if(i!=0)
-                break;
+                break;  //Ignore leading spaces
         }
     }
     if(overflow && !displayederror){
