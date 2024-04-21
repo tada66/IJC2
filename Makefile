@@ -82,5 +82,5 @@ clean:
 
 .PHONY: zip
 zip: all
-	zip xhorakt00.zip *.c *.h Makefile
+	zip xhorakt00.zip *.c *.cc *.h Makefile
 	make clean
