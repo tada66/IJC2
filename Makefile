@@ -84,3 +84,10 @@ clean:
 zip: all
 	zip xhorakt00.zip *.c *.cc *.h Makefile
 	make clean
+
+.PHONY: run
+run: all
+	./tail
+	./wordcount
+	LD_LIBRARY_PATH="." ./wordcount-dynamic
+	make clean
