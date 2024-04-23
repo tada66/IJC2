@@ -31,6 +31,9 @@ int main(){
         memset(word, 0, sizeof(char) * MAX_WORD_LENGTH);
     }
     htab_for_each(t, &print_count);
+    #ifdef STATISTICS
+    htab_statistics(t);
+    #endif
     htab_free(t);
     free(word);
 
