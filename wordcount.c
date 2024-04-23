@@ -8,7 +8,7 @@
 #include "io.h"
 #include "htab.h"
 
-#define HASH_TABLE_SIZE 1300021
+#define HASH_TABLE_SIZE 325001 // Czech has roughly 250k word, ideal hash table size should be 1.3x that and it should also be a prime number
 #define MAX_WORD_LENGTH 256 //255+1 for \0
 
 void print_count(htab_pair_t *data) {
