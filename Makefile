@@ -90,4 +90,3 @@ run: all
 	./tail
 	./wordcount
 	LD_LIBRARY_PATH="." ./wordcount-dynamic
-	make clean
