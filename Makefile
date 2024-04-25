@@ -87,6 +87,6 @@ zip: all
 
 .PHONY: run
 run: all
-	./tail
-	./wordcount
-	LD_LIBRARY_PATH="." ./wordcount-dynamic
+	seq 1 20 | ./tail - n 5
+	seq 1 25 | ./wordcount
+	seq 1 10 | LD_LIBRARY_PATH="." ./wordcount-dynamic
