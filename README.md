@@ -4,6 +4,8 @@ Jazyk C                       DU2                      26.3.2024
 
 Termín odevzdání: 24.4.2024                       (Max. 15 bodů)
 
+Konečné hodnocení: 14b
+
 # 1) (max 5b)
    a) V jazyku C napište program "tail.c", který  ze zadaného
    vstupního souboru vytiskne posledních  10 řádků. Není-li
